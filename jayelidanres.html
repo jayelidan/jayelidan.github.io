@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume Template</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js library for the background effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Hide scrollbars due to fixed canvas */
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- The Three.js canvas for the background effect -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main content container for the resume and download button -->
+    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
+        <!-- Resume Template -->
+        <div id="resume-content" class="bg-white text-gray-800 rounded-xl shadow-xl p-8 sm:p-12 w-full max-w-2xl transform transition-transform duration-500 hover:scale-[1.01] my-8">
+            <h1 class="text-4xl font-extrabold text-center mb-6 text-indigo-600">John Doe</h1>
+            <p class="text-center text-sm text-gray-500 mb-8">
+                123 Main Street, Anytown, USA | (555) 123-4567 | john.doe@email.com | linkedin.com/in/johndoe
+            </p>
+
+            <div class="space-y-6">
+                <!-- Summary Section -->
+                <div class="border-b-2 pb-4">
+                    <h2 class="text-2xl font-bold mb-2 text-indigo-500">Professional Summary</h2>
+                    <p class="text-sm">
+                        Highly motivated and detail-oriented professional with 5+ years of experience in project management and team leadership. Proven ability to streamline workflows, improve efficiency, and deliver projects on time and under budget. Seeking to leverage skills in a challenging new role.
+                    </p>
+                </div>
+
+                <!-- Experience Section -->
+                <div class="border-b-2 pb-4">
+                    <h2 class="text-2xl font-bold mb-2 text-indigo-500">Experience</h2>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-lg font-semibold">Senior Project Manager</h3>
+                            <span class="text-sm text-gray-500">2020 - Present</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Tech Solutions Inc., San Francisco, CA</p>
+                        <ul class="list-disc list-inside text-sm mt-2 space-y-1">
+                            <li>Led a team of 10 to successfully deliver 5 major software projects, increasing client satisfaction by 25%.</li>
+                            <li>Implemented agile methodologies, reducing project delivery time by an average of 15%.</li>
+                            <li>Managed project budgets of over $1M, ensuring all financial targets were met.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Education Section -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-2 text-indigo-500">Education</h2>
+                    <div class="mb-2">
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-lg font-semibold">Master of Business Administration</h3>
+                            <span class="text-sm text-gray-500">2018</span>
+                        </div>
+                        <p class="text-sm text-gray-600">University of California, Berkeley</p>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-lg font-semibold">Bachelor of Science in Computer Science</h3>
+                            <span class="text-sm text-gray-500">2015</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Stanford University</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Button -->
+        <button id="download-btn" class="mt-8 px-8 py-4 bg-indigo-600 text-white font-bold rounded-full shadow-lg hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 transform hover:scale-105">
+            Download Template
+        </button>
+    </div>
+
+    <script>
+        // --- THREE.JS Water Ripple Effect ---
+        const canvas = document.getElementById('bg-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        camera.position.z = 1;
+
+        // Custom shader for the water ripple effect
+        const vertexShader = `
+            void main() {
+                gl_Position = vec4(position, 1.0);
+            }
+        `;
+        const fragmentShader = `
+            uniform vec2 u_resolution;
+            uniform vec2 u_mouse;
+            uniform float u_time;
+
+            void main() {
+                vec2 st = gl_FragCoord.xy / u_resolution.xy;
+                vec2 mouse_norm = u_mouse / u_resolution.xy;
+
+                // Calculate the distance from the mouse pointer
+                float dist = distance(st, mouse_norm);
+
+                // Create a sine wave ripple effect
+                float ripple = sin(dist * 50.0 - u_time * 1.5) * 0.05 + 0.1;
+
+                // Create a subtle background gradient
+                vec3 base_color = vec3(0.08, 0.08, 0.1);
+                vec3 ripple_color = vec3(0.3, 0.6, 1.0);
+                
+                // Combine the base color with the ripple
+                vec3 final_color = mix(base_color, ripple_color, ripple);
+
+                gl_FragColor = vec4(final_color, 1.0);
+            }
+        `;
+
+        const uniforms = {
+            u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            u_mouse: { value: new THREE.Vector2(0, 0) },
+            u_time: { value: 0.0 }
+        };
+
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const material = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader
+        });
+
+        const plane = new THREE.Mesh(geometry, material);
+        scene.add(plane);
+
+        // Update mouse position on mouse move
+        document.addEventListener('mousemove', (event) => {
+            uniforms.u_mouse.value.x = event.clientX;
+            uniforms.u_mouse.value.y = window.innerHeight - event.clientY; // Flip Y-axis
+        });
+
+        // Handle window resizing
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            uniforms.u_resolution.value.x = window.innerWidth;
+            uniforms.u_resolution.value.y = window.innerHeight;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            uniforms.u_time.value += 0.01;
+            renderer.render(scene, camera);
+        }
+
+        // --- RESUME DOWNLOAD LOGIC ---
+        const downloadBtn = document.getElementById('download-btn');
+        const resumeContent = `
+John Doe
+123 Main Street, Anytown, USA | (555) 123-4567 | john.doe@email.com | linkedin.com/in/johndoe
+
+---
+PROFESSIONAL SUMMARY
+Highly motivated and detail-oriented professional with 5+ years of experience in project management and team leadership. Proven ability to streamline workflows, improve efficiency, and deliver projects on time and under budget. Seeking to leverage skills in a challenging new role.
+
+---
+EXPERIENCE
+Senior Project Manager, Tech Solutions Inc., San Francisco, CA | 2020 - Present
+- Led a team of 10 to successfully deliver 5 major software projects, increasing client satisfaction by 25%.
+- Implemented agile methodologies, reducing project delivery time by an average of 15%.
+- Managed project budgets of over $1M, ensuring all financial targets were met.
+
+Project Coordinator, Innovate Solutions Inc., Boston, MA | 2018 - 2020
+- Coordinated project schedules and resources for a portfolio of 10+ clients.
+- Assisted senior managers with budget tracking and client communication.
+
+---
+EDUCATION
+Master of Business Administration | University of California, Berkeley | 2018
+Bachelor of Science in Computer Science | Stanford University | 2015
+`;
+
+        downloadBtn.addEventListener('click', () => {
+            // Create a Blob from the resume content
+            const blob = new Blob([resumeContent], { type: 'text/plain' });
+            
+            // Create a temporary link element
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume_template.txt';
+            
+            // Append the link to the body and click it to trigger download
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up by removing the link and revoking the URL
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        window.onload = function() {
+            animate();
+        };
+    </script>
+</body>
+</html>
