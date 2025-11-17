@@ -6,180 +6,93 @@
   <title>Jason Elias Daniel — Resume</title>
   <style>
     :root {
-      --bg: #0f1220;
-      --card: #151a2e;
-      --accent: #4cc9f0;
-      --accent2: #b8f2ff;
-      --text: #e8ecf1;
-      --muted: #a8b0c0;
-      --highlight: #f72585;
+      --bg: #0d0d0d;          /* dark base */
+      --card: #1a1a1a;        /* darker section cards */
+      --verde: #a8d5ba;       /* pastel green */
+      --cinnamon: #d9a066;    /* pastel cinnamon/gold */
+      --text: #f0f0f0;        /* light text */
+      --muted: #b0b0b0;       /* muted text */
     }
 
     * { box-sizing: border-box; }
-    html, body {
+    body {
       margin: 0; padding: 0; background: var(--bg); color: var(--text);
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.55;
     }
 
-    /* Page frame with geometric borders */
     .page {
-      max-width: 980px; margin: 40px auto; position: relative; padding: 0;
-      border-left: 10px solid transparent; border-right: 10px solid transparent;
+      max-width: 980px; margin: 40px auto; position: relative;
     }
 
-    /* Left vertical border: stacked hexagons (SVG background) */
+    /* Vertical borders */
     .page::before {
-      content: "";
-      position: absolute; left: -24px; top: 0; bottom: 0; width: 18px;
+      content: ""; position: absolute; left: -24px; top: 0; bottom: 0; width: 18px;
       background-image:
-        radial-gradient(circle at 50% 12px, var(--accent) 6px, transparent 7px),
-        radial-gradient(circle at 50% 44px, var(--accent) 6px, transparent 7px),
-        radial-gradient(circle at 50% 76px, var(--accent) 6px, transparent 7px);
-      background-size: 18px 96px;
-      background-repeat: repeat-y;
+        radial-gradient(circle at 50% 12px, var(--verde) 6px, transparent 7px),
+        radial-gradient(circle at 50% 44px, var(--verde) 6px, transparent 7px);
+      background-size: 18px 72px; background-repeat: repeat-y;
       opacity: 0.9;
-      filter: drop-shadow(0 0 6px rgba(76,201,240,0.35));
     }
-
-    /* Right vertical border: diamonds grid */
     .page::after {
-      content: "";
-      position: absolute; right: -24px; top: 0; bottom: 0; width: 18px;
+      content: ""; position: absolute; right: -24px; top: 0; bottom: 0; width: 18px;
       background-image:
-        linear-gradient(45deg, transparent 45%, var(--accent2) 46%, var(--accent2) 54%, transparent 55%),
-        linear-gradient(-45deg, transparent 45%, var(--accent2) 46%, var(--accent2) 54%, transparent 55%);
-      background-size: 18px 36px;
-      background-repeat: repeat-y;
+        linear-gradient(45deg, transparent 45%, var(--cinnamon) 46%, var(--cinnamon) 54%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, var(--cinnamon) 46%, var(--cinnamon) 54%, transparent 55%);
+      background-size: 18px 36px; background-repeat: repeat-y;
       opacity: 0.9;
-      filter: drop-shadow(0 0 6px rgba(184,242,255,0.35));
     }
 
-    /* Header with a different geometric border: triangle band */
     header {
-      position: relative; padding: 28px 28px 40px; background: linear-gradient(180deg, #121734 0%, #0f1220 100%);
+      position: relative; padding: 28px; background: linear-gradient(180deg, #222 0%, #111 100%);
       border-radius: 14px 14px 0 0;
-      overflow: hidden;
     }
-    /* Top triangle strip */
     header::before {
-      content: "";
-      position: absolute; left: 0; right: 0; top: 0; height: 16px;
+      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 16px;
       background-image:
-        linear-gradient(135deg, transparent 25%, var(--highlight) 26% 74%, transparent 75%),
-        linear-gradient(-135deg, transparent 25%, var(--accent) 26% 74%, transparent 75%);
+        linear-gradient(135deg, transparent 25%, var(--verde) 26% 74%, transparent 75%),
+        linear-gradient(-135deg, transparent 25%, var(--cinnamon) 26% 74%, transparent 75%);
       background-size: 36px 16px;
-      opacity: 0.9;
-    }
-    /* Bottom triangle strip (inverse) */
-    header::after {
-      content: "";
-      position: absolute; left: 0; right: 0; bottom: 0; height: 16px;
-      background-image:
-        linear-gradient(45deg, transparent 25%, var(--accent) 26% 74%, transparent 75%),
-        linear-gradient(-45deg, transparent 25%, var(--highlight) 26% 74%, transparent 75%);
-      background-size: 36px 16px;
-      opacity: 0.9;
     }
 
-    .identity {
-      display: grid; grid-template-columns: 1fr; gap: 10px;
-    }
-    .name { font-size: 32px; font-weight: 800; letter-spacing: 0.5px; }
+    .name { font-size: 32px; font-weight: 800; }
     .location { color: var(--muted); font-size: 14px; }
-    .contacts {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; font-size: 14px;
-      color: var(--text);
-    }
-    .contact {
-      padding: 6px 10px; border: 1px solid rgba(76,201,240,0.35); border-radius: 10px;
-      background: rgba(21,26,46,0.6);
-    }
-    .contact a { color: var(--accent2); text-decoration: none; }
-    .contact a:hover { text-decoration: underline; }
+    .contacts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; font-size: 14px; }
+    .contact { padding: 6px 10px; border: 1px solid var(--verde); border-radius: 10px; background: #222; }
+    .contact a { color: var(--cinnamon); text-decoration: none; }
 
-    /* Section card */
-    section {
-      background: var(--card); margin: 0; padding: 24px 28px; border-top: 1px solid rgba(255,255,255,0.06);
-    }
-    .section-title {
-      font-size: 16px; text-transform: uppercase; letter-spacing: 1.6px;
-      color: var(--accent); margin: 4px 0 14px; font-weight: 700;
-    }
+    section { background: var(--card); padding: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .section-title { font-size: 16px; text-transform: uppercase; letter-spacing: 1.6px; color: var(--verde); margin-bottom: 14px; font-weight: 700; }
 
-    /* Geometric divider between sections: offset squares */
-    .divider {
-      height: 18px; background-image:
-        linear-gradient(90deg, transparent 48%, var(--accent) 49% 51%, transparent 52%),
-        repeating-linear-gradient(90deg, transparent 0 36px, rgba(255,255,255,0.06) 36px 72px);
-      opacity: 0.35;
-    }
-
-    /* Content styling */
-    p { margin: 0 0 12px; color: var(--text); }
+    p { margin: 0 0 12px; }
     ul { margin: 8px 0 0 20px; padding: 0; }
-    li { margin: 8px 0; color: var(--text); }
+    li { margin: 8px 0; }
 
-    .pill-list {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;
-    }
-    .pill {
-      font-size: 13px; color: var(--text);
-      padding: 6px 10px; border: 1px solid rgba(184,242,255,0.4); border-radius: 999px;
-      background: rgba(17,22,40,0.6);
-    }
+    .pill-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill { font-size: 13px; padding: 6px 10px; border: 1px solid var(--cinnamon); border-radius: 999px; background: #222; }
 
     .exp-role { font-weight: 700; }
     .exp-meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
 
-    /* Footer geometric band */
-    footer {
-      position: relative; padding: 14px 28px 28px; background: linear-gradient(180deg, #0f1220 0%, #101528 100%);
-      border-radius: 0 0 14px 14px;
-      overflow: hidden;
-    }
-    footer::after {
-      content: "";
-      position: absolute; left: 0; right: 0; bottom: 0; height: 18px;
-      background-image:
-        radial-gradient(circle at 12px 9px, var(--accent2) 4px, transparent 5px),
-        radial-gradient(circle at 36px 9px, var(--accent) 4px, transparent 5px),
-        radial-gradient(circle at 60px 9px, var(--highlight) 4px, transparent 5px);
-      background-size: 72px 18px; background-repeat: repeat-x;
-      opacity: 0.9;
-    }
-
-    /* Responsive */
-    @media (max-width: 640px) {
-      .page { margin: 16px auto; }
-      header, section, footer { padding: 18px; }
-      .name { font-size: 26px; }
-      .contacts { gap: 8px; }
-    }
+    footer { padding: 14px 28px; background: #111; border-radius: 0 0 14px 14px; }
   </style>
 </head>
 <body>
   <main class="page">
     <header>
-      <div class="identity">
-        <div class="name">Jason Elias Daniel</div>
-        <div class="location">New Providence, NJ 07974</div>
-        <div class="contacts">
-          <div class="contact"><a href="mailto:jdanielelias03@gmail.com">jdanielelias03@gmail.com</a></div>
-          <div class="contact"><a href="tel:+19082794575">(908) 279-4575</a></div>
-          <div class="contact"><a href="https://github.com/jayelidan" target="_blank" rel="noopener">github.com/jayelidan</a></div>
-        </div>
+      <div class="name">Jason Elias Daniel</div>
+      <div class="location">New Providence, NJ 07974</div>
+      <div class="contacts">
+        <div class="contact"><a href="mailto:jdanielelias03@gmail.com">jdanielelias03@gmail.com</a></div>
+        <div class="contact"><a href="tel:+19082794575">(908) 279-4575</a></div>
+        <div class="contact"><a href="https://github.com/jayelidan" target="_blank">github.com/jayelidan</a></div>
       </div>
     </header>
 
-    <div class="divider"></div>
-
     <section id="overview">
       <div class="section-title">Overview</div>
-      <p>Support Technician with over two years of experience across three institutional locations. Skilled in managing commercial IT inventory, documentation, warranty tracking, provisioning new devices for incoming students, and maintaining technology infrastructure. Experienced in user support and resolving hardware or software concerns.</p>
+      <p>Support Technician with over two years of experience across three institutional locations. Skilled in managing commercial IT inventory, documentation, warranty tracking, provisioning new commercial devices for incoming students, and maintaining technology infrastructure. Experienced in user support and resolving hardware or software concerns.</p>
     </section>
-
-    <div class="divider"></div>
 
     <section id="skills">
       <div class="section-title">Skills</div>
@@ -199,8 +112,6 @@
       </div>
     </section>
 
-    <div class="divider"></div>
-
     <section id="experience">
       <div class="section-title">Experience</div>
       <p class="exp-role">IT Support Technician — New Providence Board of Education</p>
@@ -216,13 +127,11 @@
       </ul>
 
       <p class="exp-role">Temporary Transportation Aid — Reliable Care Transportation LLC.</p>
-      <p class="exp-meta">Fair Lawn, NJ • November 10 – November 27, 2023</p>
+      <p class="exp-meta">Passaic, NJ • November 10 – November 27, 2023</p>
       <ul>
         <li>Provided transportation assistance for students with special needs.</li>
       </ul>
     </section>
-
-    <div class="divider"></div>
 
     <section id="education">
       <div class="section-title">Education</div>
@@ -237,9 +146,11 @@
     </section>
 
     <footer>
-      <p class="exp-meta">Designed with geometric borders: triangles in the header, hex/dot and diamond vertical bands, and offset squares between sections.</p>
+      <p class="exp-meta">Interests
+Enjoys Composing music, hiking mount tammany, cooking BBQs, and baking sweets i.e. vanilla biscotti and blueberry cobbler.</p>
     </footer>
   </main>
 </body>
 </html>
+
 
