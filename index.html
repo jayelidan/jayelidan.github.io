@@ -6,12 +6,12 @@
   <title>Jason Elias Daniel — Resume</title>
   <style>
     :root {
-      --bg: #0d0d0d;          /* dark base */
-      --card: #1a1a1a;        /* darker section cards */
-      --verde: #a8d5ba;       /* pastel green */
-      --cinnamon: #d9a066;    /* pastel cinnamon/gold */
-      --text: #f0f0f0;        /* light text */
-      --muted: #b0b0b0;       /* muted text */
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --verde: #a8d5ba;
+      --cinnamon: #d9a066;
+      --text: #f0f0f0;
+      --muted: #b0b0b0;
     }
 
     * { box-sizing: border-box; }
@@ -19,65 +19,52 @@
       margin: 0; padding: 0; background: var(--bg); color: var(--text);
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.55;
+      overflow-x: hidden;
     }
 
     .page {
       max-width: 980px; margin: 40px auto; position: relative;
     }
 
-    /* Vertical borders */
-    .page::before {
-      content: ""; position: absolute; left: -24px; top: 0; bottom: 0; width: 18px;
-      background-image:
-        radial-gradient(circle at 50% 12px, var(--verde) 6px, transparent 7px),
-        radial-gradient(circle at 50% 44px, var(--verde) 6px, transparent 7px);
-      background-size: 18px 72px; background-repeat: repeat-y;
-      opacity: 0.9;
-    }
-    .page::after {
-      content: ""; position: absolute; right: -24px; top: 0; bottom: 0; width: 18px;
-      background-image:
-        linear-gradient(45deg, transparent 45%, var(--cinnamon) 46%, var(--cinnamon) 54%, transparent 55%),
-        linear-gradient(-45deg, transparent 45%, var(--cinnamon) 46%, var(--cinnamon) 54%, transparent 55%);
-      background-size: 18px 36px; background-repeat: repeat-y;
-      opacity: 0.9;
+    header, section, footer {
+      position: relative;
+      z-index: 2; /* keep text above visuals */
     }
 
-    header {
-      position: relative; padding: 28px; background: linear-gradient(180deg, #222 0%, #111 100%);
-      border-radius: 14px 14px 0 0;
-    }
-    header::before {
-      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 16px;
-      background-image:
-        linear-gradient(135deg, transparent 25%, var(--verde) 26% 74%, transparent 75%),
-        linear-gradient(-135deg, transparent 25%, var(--cinnamon) 26% 74%, transparent 75%);
-      background-size: 36px 16px;
+    /* Three.js canvas overlay */
+    #threejs-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none; /* allow clicks through */
+      opacity: 0; /* hidden by default */
+      transition: opacity 0.6s ease;
     }
 
+    /* Resume styling (unchanged from your version) */
+    header { padding: 28px; background: linear-gradient(180deg, #222 0%, #111 100%); border-radius: 14px 14px 0 0; }
     .name { font-size: 32px; font-weight: 800; }
     .location { color: var(--muted); font-size: 14px; }
     .contacts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; font-size: 14px; }
     .contact { padding: 6px 10px; border: 1px solid var(--verde); border-radius: 10px; background: #222; }
     .contact a { color: var(--cinnamon); text-decoration: none; }
-
     section { background: var(--card); padding: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
     .section-title { font-size: 16px; text-transform: uppercase; letter-spacing: 1.6px; color: var(--verde); margin-bottom: 14px; font-weight: 700; }
-
     p { margin: 0 0 12px; }
     ul { margin: 8px 0 0 20px; padding: 0; }
     li { margin: 8px 0; }
-
     .pill-list { display: flex; flex-wrap: wrap; gap: 8px; }
     .pill { font-size: 13px; padding: 6px 10px; border: 1px solid var(--cinnamon); border-radius: 999px; background: #222; }
-
     .exp-role { font-weight: 700; }
     .exp-meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
-
     footer { padding: 14px 28px; background: #111; border-radius: 0 0 14px 14px; }
   </style>
 </head>
 <body>
+  <!-- Three.js canvas -->
+  <canvas id="threejs-canvas"></canvas>
+
   <main class="page">
     <header>
       <div class="name">Jason Elias Daniel</div>
@@ -146,11 +133,34 @@
     </section>
 
     <footer>
-      <p class="exp-meta">
-Enjoys composing music, hiking mount tammany, cooking BBQs, and baking sweets i.e. vanilla biscotti and blueberry cobbler.</p>
+      <p class="exp-meta">Enjoys composing music, hiking Mount Tammany, cooking BBQs, and baking sweets i.e. vanilla biscotti and blueberry cobbler.</p>
     </footer>
   </main>
-</body>
-</html>
 
+  <!-- Three.js script -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script>
+    const canvas = document.getElementById('threejs-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // Crystal-like geometry
+    const geometry = new THREE.IcosahedronGeometry(1.5, 1);
+    const material = new THREE.MeshPhongMaterial({
+      color: 0xa8d5ba,
+      shininess: 100,
+      transparent: true,
+      opacity: 0.8,
+      wireframe: false
+    });
+    const crystal = new THREE.Mesh(geometry, material);
+    scene.add(crystal);
+
+    // Lighting
+    const light = new THREE.PointLight(0xd9a066, 1, 100);
+    light.position.set(5,5,5);
+    scene.add(light);
